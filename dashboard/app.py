@@ -5,6 +5,7 @@
 Reads what the live service scored (data/scored.jsonl) and lets an analyst work the alert queue.
 Case decisions are stored in data/cases.db (SQLite) and can be exported as labels for retraining.
 """
+import gzip
 import json
 import sqlite3
 import sys
@@ -19,6 +20,7 @@ sys.path.insert(0, str(ROOT))
 import config  # noqa: E402
 
 CASES_DB = ROOT / "data" / "cases.db"
+DEMO_LOG = ROOT / "demo" / "scored_sample.jsonl.gz"   # committed copy of a real replay, used when there is no live log
 STATUSES = ["New", "Investigating", "Confirmed fraud", "False alarm"]
 
 st.set_page_config(page_title="Fraud Alerts", page_icon="🛡️", layout="wide")
@@ -27,7 +29,9 @@ st.set_page_config(page_title="Fraud Alerts", page_icon="🛡️", layout="wide"
 # ---------------------------------------------------------------- data
 @st.cache_data
 def load_scored(path: str, mtime: float) -> pd.DataFrame:      # mtime makes the cache refresh when the file changes
-    rows = [json.loads(x) for x in open(path, encoding="utf-8") if x.strip()]
+    opener = gzip.open if path.endswith(".gz") else open
+    with opener(path, "rt", encoding="utf-8") as f:
+        rows = [json.loads(x) for x in f if x.strip()]
     df = pd.DataFrame(rows)
     df["row"] = range(len(df))
     df["case_id"] = df["tx_id"].fillna(df["row"]).astype("int64").astype(str)
@@ -65,11 +69,16 @@ def read_json(p: Path):
 # ---------------------------------------------------------------- page
 st.title("🛡️ Fraud alert dashboard")
 
-if not config.SCORED_LOG.exists():
+source = config.SCORED_LOG if config.SCORED_LOG.exists() else (DEMO_LOG if DEMO_LOG.exists() else None)
+if source is None:
     st.info("No scored transactions yet. Start the API and run the producer, then refresh this page.")
     st.stop()
 
-df = load_scored(str(config.SCORED_LOG), config.SCORED_LOG.stat().st_mtime)
+df = load_scored(str(source), source.stat().st_mtime)
+CASES_DB.parent.mkdir(exist_ok=True)
+if source == DEMO_LOG:
+    st.info("**Demo mode:** a recorded replay of the live scoring service (PaySim hours 672-695). "
+            "Case decisions you save here are temporary. Code: github.com/sarkarshreyas853-droid/fraud-detection-platform")
 cases = load_cases()
 alerts = df[df["is_alert"]].merge(cases, on="case_id", how="left")
 alerts["status"] = alerts["status"].fillna("New")
@@ -77,7 +86,7 @@ has_labels = df["label"].notna().any()
 card = read_json(config.MODEL_CARD_PATH) or {}
 
 st.caption(f"Model **{card.get('run', '?')}** · alert threshold {card.get('threshold', float('nan')):.3f} · "
-           f"hours {df.hour.min()}-{df.hour.max()} of simulated time · source `data/scored.jsonl`")
+           f"hours {df.hour.min()}-{df.hour.max()} of simulated time · source `{source.relative_to(ROOT).as_posix()}`")
 
 # KPIs
 k = st.columns(5)
