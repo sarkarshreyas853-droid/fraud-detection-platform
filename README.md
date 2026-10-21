@@ -6,6 +6,8 @@ tracked in **MLflow**, a **FastAPI** scoring service fed by a transaction stream
 and deployment with **Docker** and **Kubernetes (Minikube)**. A **graph neural network** (PyTorch Geometric)
 was evaluated against XGBoost on a real transaction graph.
 
+**Live demo (analyst dashboard):** https://fraud-alerts-shreyas.streamlit.app
+
 Data: [PaySim](https://www.kaggle.com/datasets/ealaxi/paysim1) (6.36M simulated mobile-money transactions, 743 hours).
 GNN experiment: [Elliptic Bitcoin dataset](https://www.kaggle.com/datasets/ellipticco/elliptic-data-set).
 
