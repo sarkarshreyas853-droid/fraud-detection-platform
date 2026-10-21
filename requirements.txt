@@ -1,0 +1,12 @@
+feast
+xgboost
+scikit-learn
+pandas<3
+pyarrow
+numpy
+fastapi
+uvicorn[standard]
+httpx
+confluent-kafka
+evidently==0.7.23
+streamlit==1.66.0

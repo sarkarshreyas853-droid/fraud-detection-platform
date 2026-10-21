@@ -1,0 +1,33 @@
+{
+  "checked_at": "2026-10-21T07:58:13+00:00",
+  "model": "base | weighted",
+  "reference": "steps 521-631",
+  "current": "live service log (23,365 scored transactions, steps 672-695)",
+  "psi": {
+    "rx_prev_count": 0.0003506494181590083,
+    "rx_avg_amount": 0.0003618643985760928,
+    "rx_hours_since_last": 1.6622112558295696,
+    "amount": 0.0030930793511756735,
+    "hour_of_day": 0.5913772390285879,
+    "type_is_transfer": 0.0003374008788491915,
+    "amount_to_rx_avg": 0.000873503142616873
+  },
+  "psi_limit": 0.2,
+  "drifted_features": [
+    "rx_hours_since_last",
+    "hour_of_day"
+  ],
+  "drift_share": 0.2857142857142857,
+  "drift_share_limit": 0.5,
+  "performance": {
+    "pr_auc": 0.5365780327231089,
+    "baseline": 0.011213353306227263,
+    "reference_test_pr_auc": 0.6131847893598207,
+    "n_fraud": 262,
+    "n": 23365,
+    "ratio": 0.8750674218179955
+  },
+  "perf_ratio_limit": 0.8,
+  "retrain": false,
+  "reasons": []
+}

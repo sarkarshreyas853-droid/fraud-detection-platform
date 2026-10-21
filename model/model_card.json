@@ -1,0 +1,22 @@
+{
+  "run": "base | weighted",
+  "features": [
+    "rx_prev_count",
+    "rx_avg_amount",
+    "rx_hours_since_last",
+    "amount",
+    "hour_of_day",
+    "type_is_transfer",
+    "amount_to_rx_avg"
+  ],
+  "threshold": 0.9222723841667175,
+  "class_weighting": true,
+  "test_pr_auc": 0.6131847893598207,
+  "test_precision": 0.7626112759643917,
+  "test_recall": 0.41054313099041534,
+  "test_recall_at_1pct_alerts": 0.28833865814696485,
+  "split": {
+    "train_max_step": 520,
+    "valid_max_step": 631
+  }
+}

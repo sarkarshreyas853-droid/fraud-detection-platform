@@ -1,0 +1,19 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Large or generated data (recreate with the notebooks and scripts/prepare_feast.py)
+data/*.parquet
+data/*.jsonl
+data/*.db
+feature_repo/data/*.db
+feature_repo/data/*.parquet
+mlflow.db
+
+# Local tools and outputs
+*.code-workspace
+*.zip
+model/archive/
+reports/drift_report.html
+reports/RETRAIN_NEEDED

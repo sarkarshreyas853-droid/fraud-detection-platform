@@ -1,0 +1,9 @@
+# Only what the scoring API needs (keeps the Docker image small)
+feast
+xgboost
+scikit-learn
+pandas<3
+pyarrow
+numpy
+fastapi
+uvicorn[standard]
